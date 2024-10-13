@@ -1,7 +1,6 @@
 export class InputHandler {
-  constructor({ game, menu, canvas, onPointerEvent }) {
+  constructor({ game, canvas, onPointerEvent }) {
     this.game = game;
-    this.menu = menu;
     this.canvas = canvas;
     this.onPointerEvent = onPointerEvent;
     this.pointer = {
@@ -14,9 +13,9 @@ export class InputHandler {
     this.canvas.addEventListener("touchstart", (e) =>
       this.handleTouchStartEvent(e)
     );
-    this.canvas.addEventListener("mousemove", (e) =>
-      this.handleMouseMoveEvent(e)
-    );
+    // this.canvas.addEventListener("mousemove", (e) =>
+    //   this.handleMouseMoveEvent(e)
+    // );
   }
   handleClickEvent(e) {
     const rect = this.canvas.getBoundingClientRect();
@@ -31,10 +30,10 @@ export class InputHandler {
     this.pointer.y = touch.clientY - rect.top;
     this.onPointerEvent(this.pointer);
   }
-  handleMouseMoveEvent(e) {
-    const rect = this.canvas.getBoundingClientRect();
-    this.pointer.x = e.clientX - rect.left;
-    this.pointer.y = e.clientY - rect.top;
-    this.menu.checkPointerOverButtons(this.pointer);
-  }
+  // handleMouseMoveEvent(e) {
+  //   const rect = this.canvas.getBoundingClientRect();
+  //   this.pointer.x = e.clientX - rect.left;
+  //   this.pointer.y = e.clientY - rect.top;
+  //   this.menu.checkPointerOverButtons(this.pointer);
+  // }
 }

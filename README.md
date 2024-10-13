@@ -11,3 +11,7 @@ SCREENSHOT HERE
 ## Play Now
 
 [Coming Soon](https://github.com/Torvec/tic-tac-toe-ultimate)
+
+### Notes
+
+- This project originally started in my other repository [Tic-Tac-Toe](https://github.com/Torvec/tic-tac-toe) that I decided to split into two separate projects. The other is the Classic Tic Tac Toe game which can be found here: [Classic Tic Tac Toe](https://github.com/Torvec/tic-tac-toe-classic)
