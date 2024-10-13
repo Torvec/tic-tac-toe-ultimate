@@ -66,56 +66,57 @@ class Cell {
         this.content = " ";
         break;
       case CELL.X:
-        this.borderColor = "blue";
-        this.bg = "darkblue";
-        this.color = "lightblue";
+        this.borderColor = "#99A3FF";
+        this.bg = "#0A1DC2";
+        this.color = "#99A3FF";
         this.content = "X";
         break;
       case CELL.O:
-        this.borderColor = "red";
-        this.bg = "darkred";
-        this.color = "pink";
+        this.borderColor = "#FFCCCC";
+        this.bg = "#C20A0A";
+        this.color = "#FFCCCC";
         this.content = "O";
         break;
     }
     switch (this.grid.state) {
       case GRID.ACTIVE:
         this.globalAlpha = 1;
+        this.borderColor = "#777";
         break;
       case GRID.INACTIVE:
-        this.globalAlpha = 0.5;
+        this.globalAlpha = 0.35;
         break;
       case GRID.X:
-        this.borderColor = "blue";
-        this.bg = "darkblue";
-        this.color = "lightblue";
+        this.borderColor = "rgba(10, 29, 194, 0.2)";
+        this.bg = "#99A3FF";
+        this.color = "rgba(10, 29, 194, 0.2)";
         break;
       case GRID.O:
-        this.borderColor = "red";
-        this.bg = "darkred";
-        this.color = "pink";
+        this.borderColor = "rgba(194, 10, 10, 0.2)";
+        this.bg = "#FFCCCC";
+        this.color = "rgba(194, 10, 10, 0.2)";
         break;
       case GRID.DRAW:
-        this.borderColor = "black";
-        this.bg = "darkgray";
-        this.color = "lightgray";
+        this.borderColor = "#999999";
+        this.bg = "#AAAAAA";
+        this.color = "#999999";
         break;
     }
     switch (this.board.state) {
       case BOARD.X:
-        this.borderColor = "blue";
-        this.bg = "darkblue";
-        this.color = "lightblue";
+        this.borderColor = "rgba(10, 29, 194, 0.2)";
+        this.bg = "#99A3FF";
+        this.color = "rgba(10, 29, 194, 0.2)";
         break;
       case BOARD.O:
-        this.borderColor = "red";
-        this.bg = "darkred";
-        this.color = "pink";
+        this.borderColor = "rgba(194, 10, 10, 0.2)";
+        this.bg = "#FFCCCC";
+        this.color = "rgba(194, 10, 10, 0.2)";
         break;
       case BOARD.DRAW:
-        this.borderColor = "black";
-        this.bg = "darkgray";
-        this.color = "lightgray";
+        this.borderColor = "#999999";
+        this.bg = "#AAAAAA";
+        this.color = "#999999";
         break;
     }
   }
@@ -134,7 +135,7 @@ class Cell {
       y: this.y + 4,
       width: this.width - 8,
       height: this.height - 8,
-      radius: 20,
+      radius: 16,
       stroke: true,
     });
     // Cell Background
@@ -146,7 +147,7 @@ class Cell {
       y: this.y + 4,
       width: this.width - 8,
       height: this.height - 8,
-      radius: 20,
+      radius: 16,
       fill: true,
     });
     // Cell Content
