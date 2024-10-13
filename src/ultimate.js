@@ -1,3 +1,5 @@
+import { RoundedRect, EndGameMessage, CurrentPlayerSign } from "./UI.js";
+
 const PLAYER = {
   X: "X",
   O: "O",
@@ -50,14 +52,7 @@ class Cell {
     this.color;
     this.content;
     this.state = CELL.EMPTY;
-  }
-  isPointerOver(pointer) {
-    return (
-      pointer.x >= this.x &&
-      pointer.x <= this.x + this.width &&
-      pointer.y >= this.y &&
-      pointer.y <= this.y + this.height
-    );
+    this.roundedRect = new RoundedRect(this.board.game);
   }
   setState(newState) {
     if (this.state === CELL.EMPTY) this.state = newState;
@@ -65,7 +60,7 @@ class Cell {
   cellStates(stateName) {
     switch (stateName) {
       case CELL.EMPTY:
-        this.borderColor = "black";
+        this.borderColor = "white";
         this.bg = "lightgray";
         this.color = "";
         this.content = " ";
@@ -133,10 +128,27 @@ class Cell {
     // Cell Border
     c.strokeStyle = this.borderColor;
     c.lineWidth = this.borderWidth;
-    c.strokeRect(this.x, this.y, this.width, this.height);
+    this.roundedRect.draw({
+      c: c,
+      x: this.x + 4,
+      y: this.y + 4,
+      width: this.width - 8,
+      height: this.height - 8,
+      radius: 20,
+      stroke: true,
+    });
     // Cell Background
     c.fillStyle = this.bg;
-    c.fillRect(this.x, this.y, this.width, this.height);
+    c.fillStyle = this.bg;
+    this.roundedRect.draw({
+      c: c,
+      x: this.x + 4,
+      y: this.y + 4,
+      width: this.width - 8,
+      height: this.height - 8,
+      radius: 20,
+      fill: true,
+    });
     // Cell Content
     c.fillStyle = this.color;
     c.font = "bold 64px Monospace";
@@ -145,7 +157,7 @@ class Cell {
     c.fillText(
       this.state,
       this.x + this.width * 0.5,
-      this.y + this.height * 0.5
+      this.y + this.height * 0.5 + 4
     );
     c.restore();
   }
@@ -163,17 +175,17 @@ class Grid {
     this.createGrid();
   }
   createGrid() {
-    const padding = 10;
+    const offset = 16;
     for (let row = 0; row < 3; row++) {
       for (let col = 0; col < 3; col++) {
         this.cells.push(
           new Cell({
             board: this.board,
             grid: this,
-            x: this.x + padding + (col * (this.width - 2 * padding)) / 3,
-            y: this.y + padding + (row * (this.height - 2 * padding)) / 3,
-            width: (this.width - 2 * padding) / 3,
-            height: (this.height - 2 * padding) / 3,
+            x: offset / 2 + this.x + (col * (this.width - offset)) / 3,
+            y: offset / 2 + this.y + (row * (this.height - offset)) / 3,
+            width: (this.width - offset) / 3,
+            height: (this.height - offset) / 3,
           })
         );
       }
@@ -230,22 +242,24 @@ export class Board {
     this.gameOver = false;
     this.player = null;
     this.setCurrentPlayer();
+    this.currentPlayerSign = new CurrentPlayerSign(this.game);
     this.grids = [];
     this.createBoard();
     this.state = BOARD.PLAY;
+    this.endGameMessage = new EndGameMessage(this.game);
     this.setActiveGrid(4, 4);
+    
   }
   createBoard() {
-    const padding = 10;
     for (let row = 0; row < 3; row++) {
       for (let col = 0; col < 3; col++) {
         this.grids.push(
           new Grid({
             board: this,
-            x: this.x + padding + (col * (this.width - 2 * padding)) / 3,
-            y: this.y + padding + (row * (this.height - 2 * padding)) / 3,
-            width: (this.width - 2 * padding) / 3,
-            height: (this.height - 2 * padding) / 3,
+            x: this.x + (col * this.width) / 3,
+            y: this.y + (row * this.height) / 3,
+            width: this.width / 3,
+            height: this.height / 3,
           })
         );
       }
@@ -264,7 +278,7 @@ export class Board {
     this.grids.forEach((grid, gridIndex) => {
       if (grid.state === GRID.ACTIVE && !this.gameOver) {
         grid.cells.forEach((cell, cellIndex) => {
-          if (cell.isPointerOver(this.input.pointer)) {
+          if (this.game.isPointerOver(this.input.pointer, cell)) {
             cell.setState(CELL[this.player]);
             grid.handleGridStateChange();
             this.handleBoardStateChange();
@@ -331,64 +345,33 @@ export class Board {
       this.gameOver = true;
     }
   }
-  displayCurrentPlayer(c, player) {
-    c.save();
-    c.textAlign = "center";
-    c.textBaseline = "middle";
-    // Player X
-    c.fillStyle = player === PLAYER.X ? "blue" : "grey";
-    c.font = "bold 64px Roboto Mono";
-    c.fillText("X", this.x + 128, this.height * 0.2);
-    c.font = "bold 32px Roboto Mono";
-    c.fillText("Turn", this.x + 128, this.height * 0.25);
-    // Player O
-    c.fillStyle = player === PLAYER.O ? "maroon" : "grey";
-    c.font = "bold 64px Roboto Mono";
-    c.fillText("O", this.x + 640, this.height * 0.2);
-    c.font = "bold 32px Roboto Mono";
-    c.fillText("Turn", this.x + 640, this.height * 0.25);
-    c.restore();
-  }
-  displayEndGameMessage({ c, winner, message }) {
-    c.save();
-    c.fillStyle = "white";
-    c.shadowColor = "rgba(0, 0, 0, 0.5)";
-    c.shadowBlur = 10;
-    c.shadowOffsetX = 5;
-    c.shadowOffsetY = 5;
-    c.fillRect(
-      0,
-      this.game.height * 0.25 + this.game.height * 0.125,
-      this.game.width,
-      this.game.height * 0.25
-    );
-    if (winner === PLAYER.X) {
-      c.fillStyle = "blue";
-    } else if (winner === PLAYER.O) {
-      c.fillStyle = "maroon";
-    } else {
-      c.fillStyle = "black";
-    }
-    c.font = "bold 96px Monospace";
-    c.textAlign = "center";
-    c.textBaseline = "middle";
-    c.fillText(message, this.x + this.width * 0.5, this.y + this.height * 0.5);
-    c.restore();
-  }
   update() {
     this.grids.forEach((grid) => grid.update());
   }
   draw(c) {
+    this.currentPlayerSign.draw({
+      c: c,
+      player: this.player,
+      x_Xpos: this.x + 96,
+      o_Xpos: this.x + 608,
+      y: this.height * 0.15,
+    });
     this.grids.forEach((grid) => grid.draw(c));
-    this.displayCurrentPlayer(c, this.player);
     const { won, winner } = this.isBoardWon(this.grids);
     if (won)
-      this.displayEndGameMessage({
+      this.endGameMessage.draw({
         c: c,
         winner: winner,
-        message: winner + " has won!",
+        message: winner + " Wins!",
+        x: this.x + this.width * 0.5,
+        y: this.y + this.height * 0.5,
       });
     else if (this.isBoardDraw(this.grids))
-      this.displayEndGameMessage({ c: c, message: "It's a DRAW!" });
+      this.endGameMessage.draw({
+        c: c,
+        message: "DRAW!",
+        x: this.x + this.width * 0.5,
+        y: this.y + this.height * 0.5,
+      });
   }
 }
