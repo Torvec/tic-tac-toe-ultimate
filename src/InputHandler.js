@@ -26,4 +26,12 @@ export class InputHandler {
     this.pointer.y = touch.clientY - rect.top;
     this.game.board.handleClick(this.pointer);
   }
+  isPointerOver(pointer, object) {
+    return (
+      pointer.x >= object.x &&
+      pointer.x <= object.x + object.width &&
+      pointer.y >= object.y &&
+      pointer.y <= object.y + object.height
+    );
+  }
 }

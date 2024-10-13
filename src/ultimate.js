@@ -249,7 +249,6 @@ export class Board {
     this.state = BOARD.PLAY;
     this.endGameMessage = new EndGameMessage(this.game);
     this.setActiveGrid(4, 4);
-    
   }
   createBoard() {
     for (let row = 0; row < 3; row++) {
@@ -279,7 +278,7 @@ export class Board {
     this.grids.forEach((grid, gridIndex) => {
       if (grid.state === GRID.ACTIVE && !this.gameOver) {
         grid.cells.forEach((cell, cellIndex) => {
-          if (this.game.isPointerOver(this.input.pointer, cell)) {
+          if (this.input.isPointerOver(this.input.pointer, cell)) {
             cell.setState(CELL[this.player]);
             grid.handleGridStateChange();
             this.handleBoardStateChange();
@@ -346,8 +345,21 @@ export class Board {
       this.gameOver = true;
     }
   }
+  handleReplayCountdown() {
+    if (this.gameOver) {
+      let countdown = 3;
+      const interval = setInterval(() => {
+        countdown--;
+        if (countdown < 0) {
+          clearInterval(interval);
+          window.location.reload();
+        }
+      }, 1000);
+    }
+  }
   update() {
     this.grids.forEach((grid) => grid.update());
+    this.handleReplayCountdown();
   }
   draw(c) {
     this.currentPlayerSign.draw({
@@ -359,7 +371,7 @@ export class Board {
     });
     this.grids.forEach((grid) => grid.draw(c));
     const { won, winner } = this.isBoardWon(this.grids);
-    if (won)
+    if (won) {
       this.endGameMessage.draw({
         c: c,
         winner: winner,
@@ -367,12 +379,13 @@ export class Board {
         x: this.x + this.width * 0.5,
         y: this.y + this.height * 0.5,
       });
-    else if (this.isBoardDraw(this.grids))
+    } else if (this.isBoardDraw(this.grids)) {
       this.endGameMessage.draw({
         c: c,
         message: "DRAW!",
         x: this.x + this.width * 0.5,
         y: this.y + this.height * 0.5,
       });
+    }
   }
 }

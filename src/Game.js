@@ -15,14 +15,6 @@ export class Game {
     this.board = new Board(this);
     this.footer = new Footer(this);
   }
-  isPointerOver(pointer, object) {
-    return (
-      pointer.x >= object.x &&
-      pointer.x <= object.x + object.width &&
-      pointer.y >= object.y &&
-      pointer.y <= object.y + object.height
-    );
-  }
   render(c) {
     this.header.logo(c);
     this.board.update(c);
