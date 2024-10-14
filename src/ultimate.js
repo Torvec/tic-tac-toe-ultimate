@@ -281,7 +281,10 @@ export class Board {
     this.grids.forEach((grid, gridIndex) => {
       if (grid.state === GRID.ACTIVE && !this.gameOver) {
         grid.cells.forEach((cell, cellIndex) => {
-          if (this.input.isPointerOver(this.input.pointer, cell)) {
+          if (
+            this.input.isPointerOver(this.input.pointer, cell) &&
+            cell.state === CELL.EMPTY
+          ) {
             cell.setState(CELL[this.player]);
             grid.handleGridStateChange();
             this.handleBoardStateChange();
