@@ -240,6 +240,9 @@ export class Board {
     this.height = 768;
     this.x = this.game.width * 0.5 - this.width * 0.5;
     this.y = this.game.height * 0.5 - this.width * 0.5;
+    this.init();
+  }
+  init() {
     this.gameOver = false;
     this.player = null;
     this.setCurrentPlayer();
@@ -340,9 +343,11 @@ export class Board {
     if (won) {
       this.setState(BOARD[winner]);
       this.gameOver = true;
+      this.handleReplayCountdown();
     } else if (this.isBoardDraw(this.grids)) {
       this.setState(BOARD.DRAW);
       this.gameOver = true;
+      this.handleReplayCountdown();
     }
   }
   handleReplayCountdown() {
@@ -352,14 +357,13 @@ export class Board {
         countdown--;
         if (countdown < 0) {
           clearInterval(interval);
-          window.location.reload();
+          this.init();
         }
       }, 1000);
     }
   }
   update() {
     this.grids.forEach((grid) => grid.update());
-    this.handleReplayCountdown();
   }
   draw(c) {
     this.currentPlayerSign.draw({
