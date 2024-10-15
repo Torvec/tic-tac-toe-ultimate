@@ -124,9 +124,9 @@ class Cell {
     this.cellStates(this.state);
   }
   draw(c) {
-    let cellSpacing = this.grid.width <= 640 ? 8 : 16;
-    let fontSize = this.grid.width <= 640 ? "64px" : "128px";
-    let radius = this.grid.width <= 640 ? 10 : 20;
+    let cellSpacing = this.board.width <= 640 ? 4 : 8;
+    let fontSize = this.board.width <= 640 ? "24px" : "48px";
+    let radius = this.board.width <= 640 ? 6 : 12;
     c.save();
     // Cell Border
     c.strokeStyle = this.borderColor;
@@ -177,7 +177,7 @@ class Grid {
     this.createGrid();
   }
   createGrid() {
-    const offset = 16;
+    let offset = this.board.game.width <= 640 ? 8 : 16;
     for (let row = 0; row < 3; row++) {
       for (let col = 0; col < 3; col++) {
         this.cells.push(
