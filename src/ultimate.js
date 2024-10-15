@@ -247,7 +247,7 @@ export class Board {
     this.gameOver = false;
     this.player = null;
     this.setCurrentPlayer();
-    this.currentPlayerSign = new CurrentPlayerSign(this.game, this.player);
+    this.currentPlayerSign = new CurrentPlayerSign(this.game);
     this.grids = [];
     this.createBoard();
     this.state = BOARD.PLAY;
@@ -370,7 +370,7 @@ export class Board {
     this.grids.forEach((grid) => grid.update());
   }
   draw(c) {
-    this.currentPlayerSign.draw(c);
+    this.currentPlayerSign.draw(c, this.player);
     this.grids.forEach((grid) => grid.draw(c));
     const { won, winner } = this.isBoardWon(this.grids);
     if (won) {
