@@ -81,10 +81,10 @@ class Cell {
     switch (this.grid.state) {
       case GRID.ACTIVE:
         this.globalAlpha = 1;
-        this.borderColor = "#777";
+        this.borderColor = "#000";
         break;
       case GRID.INACTIVE:
-        this.globalAlpha = 0.35;
+        this.globalAlpha = 0.5;
         break;
       case GRID.X:
         this.borderColor = "rgba(10, 29, 194, 0.2)";
@@ -128,6 +128,7 @@ class Cell {
     let fontSize = this.board.width <= 640 ? "24px" : "48px";
     let radius = this.board.width <= 640 ? 6 : 12;
     c.save();
+    c.globalAlpha = this.globalAlpha;
     // Cell Border
     c.strokeStyle = this.borderColor;
     c.lineWidth = this.borderWidth;
